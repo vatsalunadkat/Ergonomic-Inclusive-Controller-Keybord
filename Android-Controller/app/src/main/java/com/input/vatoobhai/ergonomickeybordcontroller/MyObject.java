@@ -1,36 +1,66 @@
 package com.input.vatoobhai.ergonomickeybordcontroller;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.text.Layout;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.InputDevice;
 import android.view.MotionEvent;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import static com.input.vatoobhai.ergonomickeybordcontroller.JSTATES.HOME;
 import static com.input.vatoobhai.ergonomickeybordcontroller.JSTATES.LEFT;
 import static com.input.vatoobhai.ergonomickeybordcontroller.JSTATES.RIGHT;
 
+public class MyObject {
 
-public class MainActivity extends AppCompatActivity {
+    private Context context;
 
-    TextView text_main;
-    TextView text_status;
-    String mMessage = "";
-    JSTATES mState = HOME;
+    private JSTATES mState = HOME;
+    private String mMessage = "";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    private TextView displayView;
+    private TextView statusView;
 
-        text_main = findViewById(R.id.main_text_input_string);
-        text_status = findViewById(R.id.main_text_status);
-        text_status.setText("Start");
+    private SparseArray<Integer> images = new SparseArray<>();
+//  private ArrayList<Integer> images = new ArrayList();
+
+    private ImageView image_view;
+
+    public MyObject(Context context) {
+        this.context = context;
     }
 
-    @Override
-    public boolean onGenericMotionEvent(MotionEvent event) {
+    public MyObject(Context context, TextView displayView, TextView statusView, ImageView image_view) {
+        this.context = context;
+        setDisplayView(displayView);
+        this.statusView = statusView;
+        setImage_view(image_view);
+    }
+
+    public void setDisplayView(TextView displayView){
+        this.displayView = displayView;
+//        displayView.setMovementMethod(ScrollingMovementMethod);
+    }
+    public void setStatusView(TextView statusView) {
+        this.statusView = statusView;
+    }
+
+    public void setImage_view(ImageView image_view) {
+
+        this.image_view = image_view;
+
+        Log.d(Tag, "ordinal: Home:" + HOME.ordinal() + ", Left:" + LEFT.ordinal() + ", Right" + RIGHT.ordinal());
+        images.put(HOME.ordinal(), R.drawable.home_state_diagram_small);
+        images.put(LEFT.ordinal(), R.drawable.left_state_diagram_small);
+        images.put(RIGHT.ordinal(), R.drawable.right_state_diagram_small);
+
+    }
+
+    public boolean processGenericMotionEvent(MotionEvent event){
 
         // Check that the event came from a game controller
         if ((event.getSource() & InputDevice.SOURCE_JOYSTICK) ==
@@ -49,10 +79,14 @@ public class MainActivity extends AppCompatActivity {
 
             // Process the current movement sample in the batch (position -1)
             processJoystickInput(event, -1);
+            //we processed this event
             return true;
         }
-        return super.onGenericMotionEvent(event);
+        //This event is not for us. So let the system handle it.
+        return false;
+
     }
+
 
     private static float getCenteredAxis(MotionEvent event,
                                          InputDevice device, int axis, int historyPos) {
@@ -151,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
     private void processxy(int jx, float x, int jy, float y){
 //        String msg = "Joystick X = " +jx +"X = " +x +"\nJoystick Y =" +jy +"Y = " +y;
         String msg = MotionEvent.axisToString(jx) + "  X = " +x + "\n" +MotionEvent.axisToString(jy) +"  Y = " +y;
-        text_status.setText(msg);
+        statusView.setText(msg);
 
         switch (jx) {
             case (MotionEvent.AXIS_X):
@@ -225,13 +259,15 @@ public class MainActivity extends AppCompatActivity {
                         mMessage = mMessage + "9";
                         break;
                     case J1_RIGHT:
-                        mState = RIGHT;
+                        changeState(RIGHT);
+//                        mState = RIGHT;
                         break;
                     case J1_DOWN:
                         mMessage = mMessage + "0";
                         break;
                     case J1_LEFT:
-                        mState = LEFT;
+                        changeState(LEFT);
+//                        mState = LEFT;
                         break;
                     case J2_UP:
                         // do nothing;
@@ -269,19 +305,23 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case J2_UP:
                         mMessage = mMessage + "1";
-                        mState = HOME;
+                        changeState(HOME);
+//                        mState = HOME;
                         break;
                     case J2_RIGHT:
                         mMessage = mMessage + "2";
-                        mState = HOME;
+                        changeState(HOME);
+//                        mState = HOME;
                         break;
                     case J2_DOWN:
                         mMessage = mMessage + "3";
-                        mState = HOME;
+                        changeState(HOME);
+//                        mState = HOME;
                         break;
                     case J2_LEFT:
                         mMessage = mMessage + "4";
-                        mState = HOME;
+                        changeState(HOME);
+//                        mState = HOME;
                         break;
                     default:
                         // do nothing
@@ -305,19 +345,23 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case J2_UP:
                         mMessage = mMessage + "5";
-                        mState = HOME;
+                        changeState(HOME);
+//                        mState = HOME;
                         break;
                     case J2_RIGHT:
                         mMessage = mMessage + "6";
-                        mState = HOME;
+                        changeState(HOME);
+//                        mState = HOME;
                         break;
                     case J2_DOWN:
                         mMessage = mMessage + "7";
-                        mState = HOME;
+                        changeState(HOME);
+//                        mState = HOME;
                         break;
                     case J2_LEFT:
                         mMessage = mMessage + "8";
-                        mState = HOME;
+                        changeState(HOME);
+//                        mState = HOME;
                         break;
                     default:
                         // do nothing
@@ -330,11 +374,32 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Log.d(Tag, "Message = " +mMessage);
-        text_main.setText(mMessage);
+        displayView.setText(mMessage);
+
+        // below doesn't work
+        final Layout layout = displayView.getLayout();
+        if(layout != null){
+            int scrollDelta = layout.getLineBottom(displayView.getLineCount() - 1)
+                    - displayView.getScrollY() - displayView.getHeight();
+            Log.d(Tag, "scrollDelta=" + scrollDelta);
+            if(scrollDelta > 0)
+                displayView.scrollBy(0, scrollDelta);
+        }else{
+            Log.e(Tag, "null layout");
+        }
+
+
     }
 
+    private void changeState(JSTATES newstate){
 
+        mState = newstate;
+        image_view.setImageDrawable(ContextCompat.getDrawable(context, images.get(mState.ordinal())));
 
-    private static final String Tag = "Cinput";
+    }
+
+    private static final String Tag = "Cinput/MyObject";
 
 }
+
+

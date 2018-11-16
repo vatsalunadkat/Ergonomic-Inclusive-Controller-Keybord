@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/main_text_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/black" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars = "vertical"
+        android:textSize="18sp"
+        android:gravity="bottom"
+        android:cursorVisible="true"
+        android:overScrollMode="ifContentScrolls"
+        android:id="@+id/main_text_input_string" />
+    </ScrollView>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:visibility="visible"
+        android:scaleType="fitCenter"
+        android:src="@drawable/home_state_diagram_small"
+        android:id="@+id/home_state_diagram" />
+
+<!--
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:scaleType="fitEnd"
+        android:src="@drawable/left_state_diagram_small"
+        android:id="@+id/left_state_diagram" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:scaleType="fitEnd"
+        android:src="@drawable/right_state_diagram_small"
+        android:id="@+id/right_state_diagram" />
+-->
+
+
+
+</LinearLayout>

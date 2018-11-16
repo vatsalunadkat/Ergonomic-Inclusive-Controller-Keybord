@@ -1,6 +1,8 @@
 # Ergonomic-Keybord-Controller
 A type of ergonomic keyboard that will take input from a controller/joystick.
 
+It uses combinations of the controller joystick and buttons (such as pressing up on both the joysicks will give output the letter 'A'). 
+
 The first version will just be a simple notepad application taking in input. Further updates will support other apps (Such as whatsapp and evernote) and controlling the general OS GUI with the controller (Specific type of controller).
 
 Will have different modes. The simple mode will only take input from the 2 analog stick. Furthur modes will take in input using multiple combinations such as the left and right trigger.

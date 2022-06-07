@@ -41,10 +41,11 @@ public class MyObject {
         setImage_view(image_view);
     }
 
-    public void setDisplayView(TextView displayView){
+    public void setDisplayView(TextView displayView) {
         this.displayView = displayView;
 //        displayView.setMovementMethod(ScrollingMovementMethod);
     }
+
     public void setStatusView(TextView statusView) {
         this.statusView = statusView;
     }
@@ -60,7 +61,7 @@ public class MyObject {
 
     }
 
-    public boolean processGenericMotionEvent(MotionEvent event){
+    public boolean processGenericMotionEvent(MotionEvent event) {
 
         // Check that the event came from a game controller
         if ((event.getSource() & InputDevice.SOURCE_JOYSTICK) ==
@@ -99,7 +100,7 @@ public class MyObject {
         if (range != null) {
             final float flat = range.getFlat();
             final float value =
-                    historyPos < 0 ? event.getAxisValue(axis):
+                    historyPos < 0 ? event.getAxisValue(axis) :
                             event.getHistoricalAxisValue(axis, historyPos);
 
             // Ignore axis values that are within the 'flat' region of the
@@ -165,7 +166,7 @@ public class MyObject {
 
         // Update the ship object based on the new x and y values
 
-        Log.d(Tag, "X = " +x +"Y = " +y);
+        Log.d(Tag, "X = " + x + "Y = " + y);
 
         if (Math.abs(x) != 1)
             x = 0;
@@ -179,12 +180,10 @@ public class MyObject {
     }
 
 
-
-
     //Trial Log in Phone
-    private void processxy(int jx, float x, int jy, float y){
+    private void processxy(int jx, float x, int jy, float y) {
 //        String msg = "Joystick X = " +jx +"X = " +x +"\nJoystick Y =" +jy +"Y = " +y;
-        String msg = MotionEvent.axisToString(jx) + "  X = " +x + "\n" +MotionEvent.axisToString(jy) +"  Y = " +y;
+        String msg = MotionEvent.axisToString(jx) + "  X = " + x + "\n" + MotionEvent.axisToString(jy) + "  Y = " + y;
         statusView.setText(msg);
 
         switch (jx) {
@@ -236,11 +235,11 @@ public class MyObject {
     private JOYSTICK jp = JOYSTICK.NONE;
     private long timestamp = 0;
 
-    private void process_joystick(JOYSTICK j){
+    private void process_joystick(JOYSTICK j) {
 
-        if (j == jp){
+        if (j == jp) {
             long t = System.currentTimeMillis();
-            if (t - timestamp < 200){
+            if (t - timestamp < 200) {
                 //ignore multiple case
                 return;
             }
@@ -249,8 +248,9 @@ public class MyObject {
         jp = j;
         timestamp = System.currentTimeMillis();
 
-        Log.d(Tag, "j = " +j +"State =" +mState);
+        Log.d(Tag, "j = " + j + "State =" + mState);
 
+        // Logic implementation
         switch (mState) {
 
             case HOME:
@@ -373,25 +373,25 @@ public class MyObject {
                 break;
         }
 
-        Log.d(Tag, "Message = " +mMessage);
+        Log.d(Tag, "Message = " + mMessage);
         displayView.setText(mMessage);
 
         // below doesn't work
         final Layout layout = displayView.getLayout();
-        if(layout != null){
+        if (layout != null) {
             int scrollDelta = layout.getLineBottom(displayView.getLineCount() - 1)
                     - displayView.getScrollY() - displayView.getHeight();
             Log.d(Tag, "scrollDelta=" + scrollDelta);
-            if(scrollDelta > 0)
+            if (scrollDelta > 0)
                 displayView.scrollBy(0, scrollDelta);
-        }else{
+        } else {
             Log.e(Tag, "null layout");
         }
 
 
     }
 
-    private void changeState(JSTATES newstate){
+    private void changeState(JSTATES newstate) {
 
         mState = newstate;
         image_view.setImageDrawable(ContextCompat.getDrawable(context, images.get(mState.ordinal())));
